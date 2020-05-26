@@ -33,23 +33,39 @@ n	lost	reserve	return
 function solution(n, lost, reserve) {
     let copy_lost = lost.slice();
     
-    lost.forEach((val,idx)=>{
-        if (reserve.indexOf(val)>-1) {
-            splice(copy_lost, copy_lost.indexOf(val));
-            splice(reserve, reserve.indexOf(val));
+    for(let i = 0, count = lost.length; i < count; i++) {
+        let val = lost[i], prev = val-1, next = val+1;
+        let index = reserve.indexOf(val);
+        let index_val = copy_lost.indexOf(val);
+        
+        if (index > -1 && index_val > -1) {
+            splice(reserve, index);
+            splice(copy_lost, index_val);
+            continue;
         }
-        let prev = val-1, index = reserve.indexOf(prev);
+        
+        index = reserve.indexOf(prev);
+        let index2 = copy_lost.indexOf(prev);
+        
         if (index > -1) {
-            splice(copy_lost, copy_lost.indexOf(val));
-            splice(reserve, reserve.indexOf(prev));
+            splice(copy_lost, index_val);
+            splice(reserve, index);
         } else {
-            let next = val+1, index = reserve.indexOf(next);
-            if (index > -1) {
+            index = reserve.indexOf(next);
+            index2 = copy_lost.indexOf(next);
+            
+            if (index > -1 && index_val > -1) {
+                if (copy_lost.indexOf(next)>-1) {
+                    splice(copy_lost, copy_lost.indexOf(next));
+                    splice(reserve, reserve.indexOf(next));
+                    continue;
+                }
+                
                 splice(copy_lost, copy_lost.indexOf(val));
                 splice(reserve, reserve.indexOf(next));
             }
         }
-    });
+    };
     return n-copy_lost.length;
 }
 
